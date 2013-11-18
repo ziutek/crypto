@@ -12,14 +12,16 @@ func Encrypt(v []uint32, key [4]uint32) {
 	for rounds := 6 + 52/len(v); rounds != 0; rounds-- {
 		sum += delta
 		e := int((sum >> 2) & 3)
-		for p := range v[:len(v)-1] {
+		q := len(v) - 1
+		p := 0
+		for p < q {
 			y = v[p+1]
 			v[p] += mx(e, p, y, z, sum, key)
 			z = v[p]
 			p++
 		}
 		y = v[0]
-		v[len(v)-1] += mx(e,len(v)-1, y, z, sum, key)
+		v[len(v)-1] += mx(e, p, y, z, sum, key)
 		z = v[len(v)-1]
 	}
 }
